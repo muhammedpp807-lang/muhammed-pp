@@ -22,6 +22,7 @@
       min-height: 100vh;
     }
 
+    /* Custom cursor & trail */
     .cursor {
       position: fixed;
       width: 20px;
@@ -65,6 +66,7 @@
       transition: opacity 0.2s;
     }
 
+    /* Glassmorphism panels */
     .glass {
       background: rgba(18, 25, 45, 0.55);
       backdrop-filter: blur(16px);
@@ -81,64 +83,15 @@
       border: 1px solid rgba(0, 255, 255, 0.25);
       box-shadow: 0 15px 35px rgba(0, 180, 255, 0.2);
       border-radius: 1.5rem;
-      transition: all 0.3s ease;
-      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .glass-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 25px 50px rgba(0, 255, 255, 0.3);
-      border-color: rgba(0, 255, 255, 0.5);
     }
 
-    .skill-box {
-      background: rgba(0, 255, 255, 0.08);
-      border: 1px solid rgba(0, 255, 255, 0.3);
-      border-radius: 1rem;
-      padding: 1rem 1.5rem;
-      color: cyan;
-      font-weight: 600;
-      text-align: center;
-      transition: all 0.3s ease;
-      position: relative;
-      min-height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      word-break: break-word;
-    }
-
-    .skill-box:hover {
-      background: rgba(0, 255, 255, 0.15);
-      border-color: cyan;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-    }
-
-    .delete-btn {
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      width: 28px;
-      height: 28px;
-      background: rgba(255, 0, 0, 0.8);
-      border: 1px solid #ff4444;
-      border-radius: 50%;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 14px;
-      transition: all 0.3s ease;
-      z-index: 10;
-    }
-
-    .delete-btn:hover {
-      background: red;
-      transform: scale(1.2);
-      box-shadow: 0 0 15px red;
-    }
-
+    /* Loading screen */
     #loadingScreen {
       position: fixed;
       inset: 0;
@@ -162,6 +115,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #0a0f1a; }
     ::-webkit-scrollbar-thumb { background: cyan; border-radius: 10px; }
@@ -216,12 +170,11 @@
 
     .grid {
       display: grid;
-      gap: 1rem;
+      gap: 1.8rem;
     }
     .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
     .grid-3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
-    .grid-4 { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
-    .grid-skills { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
 
     .badge {
       background: rgba(0, 255, 255, 0.15);
@@ -230,7 +183,11 @@
       padding: 0.3rem 0.8rem;
       border-radius: 1rem;
       font-size: 0.8rem;
-      display: inline-block;
+    }
+
+    .star-rating {
+      color: gold;
+      font-size: 1.5rem;
     }
 
     .fade-in {
@@ -241,31 +198,53 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .add-input-group {
-      display: flex;
-      gap: 0.5rem;
+    .error-message {
+      background: rgba(255, 0, 0, 0.2);
+      border: 1px solid red;
+      color: #ff6b6b;
+      padding: 1rem;
+      border-radius: 1rem;
       margin: 1rem 0;
-      align-items: center;
     }
 
-    .add-input-group input {
-      margin: 0;
-      flex: 1;
+    .success-message {
+      background: rgba(0, 255, 0, 0.2);
+      border: 1px solid green;
+      color: #4eff4e;
+      padding: 1rem;
+      border-radius: 1rem;
+      margin: 1rem 0;
     }
 
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .login-title {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+
+    .login-subtitle {
+      color: #aaa;
       margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-      gap: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .toggle-link {
+      color: cyan;
+      cursor: pointer;
+      text-decoration: underline;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      display: inline-block;
+    }
+
+    .toggle-link:hover {
+      color: #a259ff;
     }
 
     @media (max-width: 768px) {
       .container { padding: 1rem; }
       .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-      .grid-skills { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+      .login-title { font-size: 1.5rem; }
     }
   </style>
 </head>
@@ -283,26 +262,61 @@
     // ========== GLOBAL STATE & STORAGE ==========
     const STORAGE_KEY = 'MUHAMMED_PORTFOLIO_DB';
     
+    // Default credentials (hidden from users)
     const DEFAULT_ADMIN = {
       username: 'admin',
       password: 'admin123',
       role: 'admin'
     };
 
+    const DEFAULT_PUBLIC = {
+      username: 'public',
+      password: 'public123',
+      role: 'user'
+    };
+
     function getDefaultData() {
       return {
-        users: [{ ...DEFAULT_ADMIN }],
+        users: [
+          { ...DEFAULT_ADMIN },
+          { ...DEFAULT_PUBLIC }
+        ],
         profile: {
           name: 'Muhammed PP',
           title: 'Full Stack Developer & AI Enthusiast',
-          bio: 'Building futuristic digital experiences with code, creativity, and neon dreams.',
+          bio: 'Building futuristic digital experiences with code, creativity, and neon dreams. Passionate about creating innovative solutions.',
+          avatar: '',
           location: 'Kerala, India',
           email: 'muhammed@example.com'
         },
-        skills: ['JavaScript', 'React', 'Node.js', 'Python', 'AI/ML', 'Cloud'],
-        projects: [],
-        achievements: [],
-        events: [],
+        skills: ['JavaScript', 'React', 'Node.js', 'Python', 'AI/ML', 'Cloud Computing', 'Docker', 'TypeScript'],
+        projects: [
+          {
+            id: 'sample1',
+            title: 'Portfolio Website',
+            description: 'A futuristic portfolio platform with glassmorphism design and neon effects.',
+            technologies: 'HTML, CSS, JavaScript',
+            githubLink: 'https://github.com',
+            demoLink: 'https://demo.com'
+          }
+        ],
+        achievements: [
+          {
+            id: 'ach1',
+            title: 'Best Developer Award 2024',
+            description: 'Recognized for outstanding contributions to web development.',
+            date: '2024-06-15'
+          }
+        ],
+        events: [
+          {
+            id: 'evt1',
+            name: 'Tech Conference 2024',
+            date: '2024-09-20',
+            venue: 'Kochi, Kerala',
+            description: 'Annual technology conference featuring workshops and networking.'
+          }
+        ],
         gallery: [],
         videos: [],
         files: [],
@@ -319,9 +333,13 @@
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
           const data = JSON.parse(stored);
-          if (!data.users || !data.users.some(u => u.username === 'admin')) {
-            if (!data.users) data.users = [];
+          // Ensure both default users always exist
+          if (!data.users) data.users = [];
+          if (!data.users.some(u => u.username === 'admin')) {
             data.users.push({ ...DEFAULT_ADMIN });
+          }
+          if (!data.users.some(u => u.username === 'public')) {
+            data.users.push({ ...DEFAULT_PUBLIC });
           }
           return data;
         }
@@ -334,19 +352,26 @@
     function saveData(data) {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        console.log('Data saved successfully');
       } catch (e) {
         console.error('Error saving data:', e);
+        alert('Error saving data. Storage might be full.');
       }
     }
 
+    // Initialize data
     let APP_DATA = loadData();
     
-    if (!APP_DATA.users.some(u => u.username === 'admin' && u.password === 'admin123')) {
-      APP_DATA.users = APP_DATA.users.filter(u => u.username !== 'admin');
+    // Double-check both default users exist
+    if (!APP_DATA.users.some(u => u.username === 'admin')) {
       APP_DATA.users.push({ ...DEFAULT_ADMIN });
+    }
+    if (!APP_DATA.users.some(u => u.username === 'public')) {
+      APP_DATA.users.push({ ...DEFAULT_PUBLIC });
     }
     
     saveData(APP_DATA);
+    console.log('Platform initialized successfully');
 
     let currentUser = null;
 
@@ -392,9 +417,7 @@
 
     document.addEventListener('mouseover', (e) => {
       if (!cursor) return;
-      if (e.target.tagName === 'BUTTON' || e.target.classList.contains('btn') || 
-          e.target.tagName === 'A' || e.target.classList.contains('glass-card') ||
-          e.target.classList.contains('skill-box')) {
+      if (e.target.tagName === 'BUTTON' || e.target.classList.contains('btn') || e.target.tagName === 'A' || e.target.classList.contains('glass-card')) {
         cursor.style.transform = 'scale(2.2)';
         cursor.style.background = '#a259ff';
       }
@@ -432,6 +455,9 @@
 
     // ========== AUTH ==========
     function login(username, password) {
+      console.log('Login attempt:', username);
+      
+      // Refresh data before login attempt
       APP_DATA = loadData();
       
       const user = APP_DATA.users.find(u => u.username === username && u.password === password);
@@ -440,15 +466,47 @@
         currentUser = { username: user.username, role: user.role };
         APP_DATA.visits = (APP_DATA.visits || 0) + 1;
         saveData(APP_DATA);
+        console.log('Login successful');
         
         if (user.role === 'admin') {
           navigateTo('admin');
         } else {
           navigateTo('public');
         }
+        return true;
       } else {
-        alert('❌ Invalid credentials! Please try again.');
+        return false;
       }
+    }
+
+    function register(username, password) {
+      // Validate inputs
+      if (!username || !password) {
+        return { success: false, message: '⚠️ Please fill all fields' };
+      }
+      
+      if (username.length < 3) {
+        return { success: false, message: '⚠️ Username must be at least 3 characters' };
+      }
+      
+      if (password.length < 6) {
+        return { success: false, message: '⚠️ Password must be at least 6 characters' };
+      }
+      
+      // Check if username already exists
+      if (APP_DATA.users.find(u => u.username === username)) {
+        return { success: false, message: '❌ Username already exists! Please choose another.' };
+      }
+      
+      // Create new user
+      APP_DATA.users.push({
+        username: username,
+        password: password,
+        role: 'user'
+      });
+      
+      saveData(APP_DATA);
+      return { success: true, message: '✅ Registration successful! You can now login.' };
     }
 
     function logout() {
@@ -459,36 +517,120 @@
     function renderLogin() {
       appRoot.innerHTML = `
         <div class="container" style="display:flex; align-items:center; justify-content:center; min-height:100vh;">
-          <div class="glass" style="padding:3rem; max-width:450px; width:100%; text-align:center;">
-            <h2 style="font-size:2.5rem; margin-bottom:1rem;">⚡ MUHAMMED PP</h2>
-            <p style="color:#aaa; margin-bottom:2rem;">Portfolio Platform</p>
+          <div class="glass" style="padding:2.5rem; max-width:450px; width:100%; text-align:center;">
+            <div style="margin-bottom:1.5rem;">
+              <h2 class="login-title" style="background: linear-gradient(135deg, cyan, #a259ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                Muhammed
+              </h2>
+              <h2 class="login-title" style="background: linear-gradient(135deg, #a259ff, cyan); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                PP
+              </h2>
+            </div>
+            <p class="login-subtitle">⚡ Portfolio Platform</p>
             
-            <div style="margin:2rem 0;">
-              <input type="text" id="loginUsername" placeholder="Username" style="width:100%; margin-bottom:1rem;"><br>
-              <input type="password" id="loginPassword" placeholder="Password" style="width:100%; margin-bottom:1.5rem;"><br>
-              <button id="loginBtn" style="width:100%;">🚀 Access Portal</button>
-<p style="color:#aaa; margin-bottom:0.5rem;">Public user :public </p>           
-<p style="color:#aaa; margin-bottom:2rem;">Password : public123 </p>           
+            <div id="messageBox"></div>
+            
+            <!-- Login Form -->
+            <div id="loginForm">
+              <div style="margin:1.5rem 0;">
+                <input type="text" id="loginUsername" placeholder="Username" style="width:100%; margin-bottom:0.8rem;"><br>
+                <input type="password" id="loginPassword" placeholder="Password" style="width:100%; margin-bottom:1.2rem;"><br>
+                <button id="loginBtn" style="width:100%;">🚀 Login</button>
               </div>
+              
+              <p class="toggle-link" id="showRegister">📝 Don't have an account? Register here</p>
+            </div>
+            
+            <!-- Register Form -->
+            <div id="registerForm" style="display:none;">
+              <div style="margin:1.5rem 0;">
+                <input type="text" id="regUsername" placeholder="Choose Username (min 3 chars)" style="width:100%; margin-bottom:0.8rem;"><br>
+                <input type="password" id="regPassword" placeholder="Choose Password (min 6 chars)" style="width:100%; margin-bottom:0.8rem;"><br>
+                <input type="password" id="regConfirmPassword" placeholder="Confirm Password" style="width:100%; margin-bottom:1.2rem;"><br>
+                <button id="registerBtn" style="width:100%;">✨ Create Account</button>
+              </div>
+              
+              <p class="toggle-link" id="showLogin">🔙 Already have an account? Login here</p>
+            </div>
+            
+            <p style="color: #666; font-size: 0.8rem; margin-top: 1rem;">
+              Secure authentication required
+            </p>
           </div>
         </div>
       `;
       
+      // Toggle between login and register forms
+      document.getElementById('showRegister').addEventListener('click', () => {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
+        document.getElementById('messageBox').innerHTML = '';
+      });
+      
+      document.getElementById('showLogin').addEventListener('click', () => {
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('messageBox').innerHTML = '';
+      });
+      
+      // Login handler
       document.getElementById('loginBtn').addEventListener('click', () => {
         const u = document.getElementById('loginUsername').value.trim();
         const p = document.getElementById('loginPassword').value.trim();
         
         if (!u || !p) {
-          alert('⚠️ Please enter both username and password');
+          document.getElementById('messageBox').innerHTML = '<div class="error-message">⚠️ Please enter both username and password</div>';
           return;
         }
         
-        login(u, p);
+        const success = login(u, p);
+        if (!success) {
+          document.getElementById('messageBox').innerHTML = '<div class="error-message">❌ Invalid credentials! Please try again.</div>';
+        }
       });
       
+      // Register handler
+      document.getElementById('registerBtn').addEventListener('click', () => {
+        const username = document.getElementById('regUsername').value.trim();
+        const password = document.getElementById('regPassword').value.trim();
+        const confirmPassword = document.getElementById('regConfirmPassword').value.trim();
+        
+        // Check passwords match
+        if (password !== confirmPassword) {
+          document.getElementById('messageBox').innerHTML = '<div class="error-message">❌ Passwords do not match!</div>';
+          return;
+        }
+        
+        const result = register(username, password);
+        
+        if (result.success) {
+          document.getElementById('messageBox').innerHTML = `<div class="success-message">${result.message}</div>`;
+          // Clear registration fields
+          document.getElementById('regUsername').value = '';
+          document.getElementById('regPassword').value = '';
+          document.getElementById('regConfirmPassword').value = '';
+          // Switch to login form after 2 seconds
+          setTimeout(() => {
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('messageBox').innerHTML = '<div class="success-message">✅ Registration successful! Please login.</div>';
+          }, 2000);
+        } else {
+          document.getElementById('messageBox').innerHTML = `<div class="error-message">${result.message}</div>`;
+        }
+      });
+      
+      // Allow Enter key for login
       document.getElementById('loginPassword').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
           document.getElementById('loginBtn').click();
+        }
+      });
+      
+      // Allow Enter key for register
+      document.getElementById('regConfirmPassword').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          document.getElementById('registerBtn').click();
         }
       });
     }
@@ -554,7 +696,7 @@
       switch(tab) {
         case 'users': return renderUsersManager();
         case 'profile': return renderProfileEditor();
-        case 'skills': return renderSkillsManager();
+        case 'skills': return renderSkillsEditor();
         case 'projects': return renderProjectsManager();
         case 'achievements': return renderAchievementsManager();
         case 'events': return renderEventsManager();
@@ -567,45 +709,31 @@
       }
     }
 
-    // ========== USERS MANAGER ==========
     function renderUsersManager() {
-      let html = `
-        <div class="section-header">
-          <h3>👤 User Management</h3>
-        </div>
-        <div class="add-input-group">
-          <input id="newUsername" placeholder="Enter username">
-          <input id="newPassword" placeholder="Enter password" type="password">
+      let html = `<h3>User Management</h3>
+        <div style="margin:1rem 0; display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <input id="newUsername" placeholder="Username" style="flex:1; min-width:150px;">
+          <input id="newPassword" placeholder="Password" type="password" style="flex:1; min-width:150px;">
           <button id="createUserBtn">➕ Create User</button>
         </div>
-        <div class="grid grid-2" style="margin-top:1rem;">`;
-      
+        <div class="grid" style="grid-template-columns:1fr;">`;
       APP_DATA.users.forEach(u => {
-        html += `
-          <div class="glass-card" style="padding:1.5rem;">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-              <div>
-                <strong style="font-size:1.1rem;">${u.username}</strong>
-                <span class="badge" style="margin-left:0.5rem;">${u.role}</span>
-              </div>
-              <div style="display:flex; gap:0.5rem;">
-                ${u.username !== 'admin' ? `
-                  <button onclick="changeRole('${u.username}')">🔄 Toggle Role</button>
-                  <button onclick="resetUserPassword('${u.username}')">🔑 Reset PW</button>
-                  <button onclick="deleteUser('${u.username}')" style="border-color:#ff4444; color:#ff4444;">🗑️ Delete</button>
-                ` : '<span class="badge">Protected Admin</span>'}
-              </div>
-            </div>
-          </div>`;
+        html += `<div class="glass-card" style="padding:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+          <span><strong>${u.username}</strong> <span class="badge">${u.role}</span></span>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            ${u.username !== 'admin' && u.username !== 'public' ? `<button onclick="changeRole('${u.username}')">🔄 Toggle Role</button>` : ''}
+            <button onclick="resetUserPassword('${u.username}')">🔑 Reset PW</button>
+            ${u.username !== 'admin' && u.username !== 'public' ? `<button onclick="deleteUser('${u.username}')">🗑️ Delete</button>` : '<span class="badge">System</span>'}
+          </div>
+        </div>`;
       });
-      
       html += `</div>`;
       return html;
     }
 
     window.changeRole = (username) => {
       const user = APP_DATA.users.find(u => u.username === username);
-      if (user && username !== 'admin') {
+      if (user && username !== 'admin' && username !== 'public') {
         user.role = user.role === 'admin' ? 'user' : 'admin';
         saveData(APP_DATA);
         navigateTo('admin');
@@ -626,7 +754,7 @@
     };
     
     window.deleteUser = (username) => {
-      if (username === 'admin') return;
+      if (username === 'admin' || username === 'public') return;
       if(confirm('Delete user ' + username + '?')) {
         APP_DATA.users = APP_DATA.users.filter(u => u.username !== username);
         saveData(APP_DATA); 
@@ -634,78 +762,39 @@
       }
     };
 
-    // ========== PROFILE EDITOR ==========
     function renderProfileEditor() {
       const p = APP_DATA.profile;
-      return `
-        <div class="section-header">
-          <h3>📝 Edit Profile</h3>
-          <button id="saveProfile">💾 Save Profile</button>
-        </div>
-        <div class="grid grid-2">
-          <input id="profileName" value="${p.name}" placeholder="Full Name">
-          <input id="profileTitle" value="${p.title}" placeholder="Professional Title">
-          <input id="profileLocation" value="${p.location || ''}" placeholder="Location">
-          <input id="profileEmail" value="${p.email || ''}" placeholder="Email">
-        </div>
-        <textarea id="profileBio" rows="4" placeholder="Bio">${p.bio}</textarea>
-      `;
+      return `<h3>📝 Edit Profile</h3>
+        <input id="profileName" value="${p.name}" placeholder="Full Name">
+        <input id="profileTitle" value="${p.title}" placeholder="Professional Title">
+        <input id="profileLocation" value="${p.location || ''}" placeholder="Location">
+        <input id="profileEmail" value="${p.email || ''}" placeholder="Email">
+        <textarea id="profileBio" rows="4">${p.bio}</textarea>
+        <button id="saveProfile">💾 Save Profile</button>`;
     }
 
-    // ========== SKILLS MANAGER (Box-based) ==========
-    function renderSkillsManager() {
-      let html = `
-        <div class="section-header">
-          <h3>⚡ Skills Management</h3>
-        </div>
-        <div class="add-input-group">
-          <input id="newSkillInput" placeholder="Enter skill name">
-          <button id="addSkillBtn">➕ Add Skill</button>
-        </div>
-        <div class="grid grid-skills" id="skillsGrid" style="margin-top:1rem;">`;
-      
-      APP_DATA.skills.forEach((skill, index) => {
-        html += `
-          <div class="skill-box">
-            ${skill}
-            <span class="delete-btn" onclick="deleteSkill(${index})" title="Delete skill">✕</span>
-          </div>`;
-      });
-      
-      html += `</div>`;
-      return html;
+    function renderSkillsEditor() {
+      return `<h3>⚡ Skills</h3>
+        <p style="color:#aaa;">Enter skills separated by commas</p>
+        <textarea id="skillsText" rows="3">${APP_DATA.skills.join(', ')}</textarea>
+        <button id="saveSkills">💾 Save Skills</button>`;
     }
 
-    window.deleteSkill = (index) => {
-      if(confirm('Delete this skill?')) {
-        APP_DATA.skills.splice(index, 1);
-        saveData(APP_DATA);
-        document.getElementById('adminTabContent').innerHTML = renderSkillsManager();
-        attachTabSpecificEvents('skills');
-      }
-    };
-
-    // ========== PROJECTS MANAGER ==========
     function renderProjectsManager() {
-      let html = `
-        <div class="section-header">
-          <h3>📁 Projects Management</h3>
-          <button id="addProject">➕ Add New Project</button>
-        </div>
+      let html = `<h3>📁 Projects Management</h3>
+        <button id="addProject">➕ Add New Project</button>
         <div id="projectsList" class="grid grid-2" style="margin-top:1rem;">`;
-      
       APP_DATA.projects.forEach((p, i) => {
         html += `
-          <div class="glass-card" style="padding:1.5rem;">
-            <span class="delete-btn" onclick="deleteItem('projects',${i})" title="Delete project">✕</span>
+          <div class="glass-card" style="padding:1rem;">
             <input value="${p.title || ''}" placeholder="Project Title" onchange="updateProject(${i},'title',this.value)">
             <textarea placeholder="Description" onchange="updateProject(${i},'description',this.value)" rows="2">${p.description || ''}</textarea>
             <input value="${p.technologies || ''}" placeholder="Technologies (comma separated)" onchange="updateProject(${i},'technologies',this.value)">
             <input value="${p.githubLink || ''}" placeholder="GitHub Link" onchange="updateProject(${i},'githubLink',this.value)">
             <input value="${p.demoLink || ''}" placeholder="Demo Link" onchange="updateProject(${i},'demoLink',this.value)">
+            <button onclick="deleteItem('projects',${i})" style="margin-top:0.5rem;">🗑️ Delete</button>
           </div>`;
       });
-      
       html += `</div>`;
       return html;
     }
@@ -716,25 +805,19 @@
       saveData(APP_DATA);
     };
 
-    // ========== ACHIEVEMENTS MANAGER ==========
     function renderAchievementsManager() {
-      let html = `
-        <div class="section-header">
-          <h3>🏆 Achievements Management</h3>
-          <button id="addAchievement">➕ Add Achievement</button>
-        </div>
+      let html = `<h3>🏆 Achievements Management</h3>
+        <button id="addAchievement">➕ Add Achievement</button>
         <div id="achievementsList" class="grid grid-2" style="margin-top:1rem;">`;
-      
       APP_DATA.achievements.forEach((a, i) => {
         html += `
-          <div class="glass-card" style="padding:1.5rem;">
-            <span class="delete-btn" onclick="deleteItem('achievements',${i})" title="Delete achievement">✕</span>
+          <div class="glass-card" style="padding:1rem;">
             <input value="${a.title || ''}" placeholder="Title" onchange="updateAchievement(${i},'title',this.value)">
             <textarea placeholder="Description" onchange="updateAchievement(${i},'description',this.value)" rows="2">${a.description || ''}</textarea>
             <input value="${a.date || ''}" type="date" onchange="updateAchievement(${i},'date',this.value)">
+            <button onclick="deleteItem('achievements',${i})" style="margin-top:0.5rem;">🗑️ Delete</button>
           </div>`;
       });
-      
       html += `</div>`;
       return html;
     }
@@ -745,26 +828,20 @@
       saveData(APP_DATA);
     };
 
-    // ========== EVENTS MANAGER ==========
     function renderEventsManager() {
-      let html = `
-        <div class="section-header">
-          <h3>📅 Events Management</h3>
-          <button id="addEvent">➕ Add Event</button>
-        </div>
+      let html = `<h3>📅 Events Management</h3>
+        <button id="addEvent">➕ Add Event</button>
         <div id="eventsList" class="grid grid-2" style="margin-top:1rem;">`;
-      
       APP_DATA.events.forEach((e, i) => {
         html += `
-          <div class="glass-card" style="padding:1.5rem;">
-            <span class="delete-btn" onclick="deleteItem('events',${i})" title="Delete event">✕</span>
+          <div class="glass-card" style="padding:1rem;">
             <input value="${e.name || ''}" placeholder="Event Name" onchange="updateEvent(${i},'name',this.value)">
             <input value="${e.date || ''}" type="date" onchange="updateEvent(${i},'date',this.value)">
             <input value="${e.venue || ''}" placeholder="Venue" onchange="updateEvent(${i},'venue',this.value)">
             <textarea placeholder="Description" onchange="updateEvent(${i},'description',this.value)" rows="2">${e.description || ''}</textarea>
+            <button onclick="deleteItem('events',${i})" style="margin-top:0.5rem;">🗑️ Delete</button>
           </div>`;
       });
-      
       html += `</div>`;
       return html;
     }
@@ -775,77 +852,55 @@
       saveData(APP_DATA);
     };
 
-    // ========== GALLERY MANAGER ==========
     function renderGalleryManager() {
-      return `
-        <div class="section-header">
-          <h3>🖼️ Gallery Management</h3>
-        </div>
-        <input type="file" id="galleryUpload" accept="image/*" multiple style="margin-bottom:1rem;">
-        <div id="galleryPreview" class="grid grid-3">
+      return `<h3>🖼️ Gallery</h3>
+        <input type="file" id="galleryUpload" accept="image/*" multiple>
+        <div id="galleryPreview" class="grid grid-3" style="margin-top:1rem;">
           ${APP_DATA.gallery.map((img, i) => `
             <div class="glass-card" style="padding:0.5rem; position:relative;">
-              <span class="delete-btn" onclick="deleteItem('gallery',${i})" title="Delete image">✕</span>
-              <img src="${img}" style="width:100%; height:200px; object-fit:cover; border-radius:1rem;" loading="lazy">
+              <img src="${img}" style="width:100%; height:150px; object-fit:cover; border-radius:1rem;" loading="lazy">
+              <button onclick="deleteItem('gallery',${i})" style="position:absolute; top:10px; right:10px;">✕</button>
             </div>
           `).join('')}
         </div>`;
     }
 
-    // ========== VIDEOS MANAGER ==========
     function renderVideoManager() {
-      return `
-        <div class="section-header">
-          <h3>🎥 Videos Management</h3>
-        </div>
-        <input type="file" id="videoUpload" accept="video/*" multiple style="margin-bottom:1rem;">
-        <div id="videoPreview" class="grid grid-2">
+      return `<h3>🎥 Videos</h3>
+        <input type="file" id="videoUpload" accept="video/*" multiple>
+        <div id="videoPreview" class="grid grid-2" style="margin-top:1rem;">
           ${APP_DATA.videos.map((v, i) => `
             <div class="glass-card" style="padding:0.5rem; position:relative;">
-              <span class="delete-btn" onclick="deleteItem('videos',${i})" title="Delete video">✕</span>
               <video src="${v}" controls style="width:100%; border-radius:1rem;"></video>
+              <button onclick="deleteItem('videos',${i})" style="position:absolute; top:10px; right:10px;">✕</button>
             </div>
           `).join('')}
         </div>`;
     }
 
-    // ========== FILES MANAGER ==========
     function renderFileManager() {
-      return `
-        <div class="section-header">
-          <h3>📂 Files Management</h3>
-        </div>
-        <input type="file" id="fileUpload" multiple style="margin-bottom:1rem;">
-        <div id="fileList">
+      return `<h3>📂 Files</h3>
+        <input type="file" id="fileUpload" multiple>
+        <div id="fileList" style="margin-top:1rem;">
           ${APP_DATA.files.map((f, i) => `
             <div class="glass-card" style="padding:1rem; display:flex; justify-content:space-between; align-items:center; margin:0.5rem 0;">
               <span>📄 ${f.name} (${f.type})</span>
-              <div style="display:flex; gap:0.5rem;">
-                <a href="${f.data}" download="${f.name}" class="btn" style="text-decoration:none;">⬇️ Download</a>
-                <span class="delete-btn" style="position:static;" onclick="deleteItem('files',${i})" title="Delete file">✕</span>
-              </div>
+              <button onclick="deleteItem('files',${i})">🗑️ Delete</button>
             </div>
           `).join('')}
         </div>`;
     }
 
-    // ========== MESSAGES VIEW ==========
     function renderMessagesView() {
-      return `
-        <div class="section-header">
-          <h3>✉️ Messages</h3>
-        </div>
-        ${APP_DATA.messages.length === 0 ? '<p style="color:#aaa;">No messages yet.</p>' : ''}
+      return `<h3>✉️ Messages</h3>
+        ${APP_DATA.messages.length === 0 ? '<p>No messages yet.</p>' : ''}
         ${APP_DATA.messages.map((m, i) => `
-          <div class="glass-card" style="padding:1.5rem; margin:0.5rem 0; ${m.read ? 'opacity:0.6;' : ''}">
-            <span class="delete-btn" onclick="deleteMessage(${i})" title="Delete message">✕</span>
-            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
-              <strong>${m.name}</strong>
-              <small>${m.email}</small>
-            </div>
-            <p style="margin:0.5rem 0;"><strong>Subject:</strong> ${m.subject || 'No subject'}</p>
+          <div class="glass-card" style="padding:1rem; margin:0.5rem 0; ${m.read ? 'opacity:0.7;' : ''}">
+            <strong>${m.name}</strong> (${m.email})<br>
+            <small>Subject: ${m.subject || 'No subject'}</small>
             <p>${m.message}</p>
             <button onclick="toggleMessageRead(${i})">${m.read ? '📩 Mark Unread' : '📬 Mark Read'}</button>
+            <button onclick="deleteMessage(${i})">🗑️ Delete</button>
           </div>
         `).join('')}`;
     }
@@ -857,29 +912,20 @@
     };
 
     window.deleteMessage = (index) => {
-      if(confirm('Delete this message?')) {
-        APP_DATA.messages.splice(index, 1);
-        saveData(APP_DATA);
-        navigateTo('admin');
-      }
+      APP_DATA.messages.splice(index, 1);
+      saveData(APP_DATA);
+      navigateTo('admin');
     };
 
-    // ========== COMMENTS MANAGER ==========
     function renderCommentsManager() {
-      return `
-        <div class="section-header">
-          <h3>💬 Comments</h3>
-        </div>
-        ${APP_DATA.comments.length === 0 ? '<p style="color:#aaa;">No comments yet.</p>' : ''}
+      return `<h3>💬 Comments</h3>
+        ${APP_DATA.comments.length === 0 ? '<p>No comments yet.</p>' : ''}
         ${APP_DATA.comments.map((c, i) => `
-          <div class="glass-card" style="padding:1.5rem; margin:0.5rem 0;">
-            <span class="delete-btn" onclick="deleteComment(${i})" title="Delete comment">✕</span>
-            <div style="display:flex; justify-content:space-between; flex-wrap:wrap;">
-              <strong>${c.author}</strong>
-              <small>on ${c.targetType || 'item'}</small>
-            </div>
-            <p style="margin:0.5rem 0;">${c.text}</p>
+          <div class="glass-card" style="padding:1rem; margin:0.5rem 0;">
+            <strong>${c.author}</strong> on ${c.targetType || 'item'}<br>
+            <p>${c.text}</p>
             <small>${new Date(c.date).toLocaleString()}</small>
+            <button onclick="deleteComment(${i})">🗑️ Delete</button>
           </div>
         `).join('')}`;
     }
@@ -893,11 +939,9 @@
     };
 
     window.deleteComment = (index) => {
-      if(confirm('Delete this comment?')) {
-        APP_DATA.comments.splice(index, 1);
-        saveData(APP_DATA);
-        navigateTo('admin');
-      }
+      APP_DATA.comments.splice(index, 1);
+      saveData(APP_DATA);
+      navigateTo('admin');
     };
 
     function attachTabSpecificEvents(tab) {
@@ -932,28 +976,18 @@
         });
       }
       if(tab === 'skills') {
-        document.getElementById('addSkillBtn')?.addEventListener('click', () => {
-          const skill = document.getElementById('newSkillInput').value.trim();
-          if(skill) {
-            APP_DATA.skills.push(skill);
-            saveData(APP_DATA);
-            document.getElementById('newSkillInput').value = '';
-            document.getElementById('adminTabContent').innerHTML = renderSkillsManager();
-            attachTabSpecificEvents('skills');
-          }
-        });
-        
-        document.getElementById('newSkillInput')?.addEventListener('keypress', (e) => {
-          if(e.key === 'Enter') {
-            document.getElementById('addSkillBtn').click();
-          }
+        document.getElementById('saveSkills')?.addEventListener('click', () => {
+          APP_DATA.skills = document.getElementById('skillsText').value.split(',').map(s => s.trim()).filter(s => s);
+          saveData(APP_DATA);
+          alert('✅ Skills saved!');
+          navigateTo('admin');
         });
       }
       if(tab === 'projects') {
         document.getElementById('addProject')?.addEventListener('click', () => {
           APP_DATA.projects.push({
             id: generateId(),
-            title: '',
+            title: 'New Project',
             description: '',
             technologies: '',
             githubLink: '',
@@ -967,7 +1001,7 @@
         document.getElementById('addAchievement')?.addEventListener('click', () => {
           APP_DATA.achievements.push({
             id: generateId(),
-            title: '',
+            title: 'New Achievement',
             description: '',
             date: ''
           });
@@ -979,7 +1013,7 @@
         document.getElementById('addEvent')?.addEventListener('click', () => {
           APP_DATA.events.push({
             id: generateId(),
-            name: '',
+            name: 'New Event',
             date: '',
             venue: '',
             description: ''
@@ -990,17 +1024,12 @@
       }
       if(tab === 'gallery') {
         document.getElementById('galleryUpload')?.addEventListener('change', function(e) {
-          const files = Array.from(e.target.files);
-          let loaded = 0;
-          files.forEach(file => {
+          Array.from(e.target.files).forEach(file => {
             const reader = new FileReader();
             reader.onload = (ev) => {
               APP_DATA.gallery.push(ev.target.result);
-              loaded++;
-              if(loaded === files.length) {
-                saveData(APP_DATA);
-                navigateTo('admin');
-              }
+              saveData(APP_DATA);
+              navigateTo('admin');
             };
             reader.readAsDataURL(file);
           });
@@ -1008,17 +1037,12 @@
       }
       if(tab === 'videos') {
         document.getElementById('videoUpload')?.addEventListener('change', function(e) {
-          const files = Array.from(e.target.files);
-          let loaded = 0;
-          files.forEach(file => {
+          Array.from(e.target.files).forEach(file => {
             const reader = new FileReader();
             reader.onload = (ev) => {
               APP_DATA.videos.push(ev.target.result);
-              loaded++;
-              if(loaded === files.length) {
-                saveData(APP_DATA);
-                navigateTo('admin');
-              }
+              saveData(APP_DATA);
+              navigateTo('admin');
             };
             reader.readAsDataURL(file);
           });
@@ -1026,9 +1050,7 @@
       }
       if(tab === 'files') {
         document.getElementById('fileUpload')?.addEventListener('change', function(e) {
-          const files = Array.from(e.target.files);
-          let loaded = 0;
-          files.forEach(file => {
+          Array.from(e.target.files).forEach(file => {
             const reader = new FileReader();
             reader.onload = (ev) => {
               APP_DATA.files.push({
@@ -1037,11 +1059,8 @@
                 type: file.type,
                 data: ev.target.result
               });
-              loaded++;
-              if(loaded === files.length) {
-                saveData(APP_DATA);
-                navigateTo('admin');
-              }
+              saveData(APP_DATA);
+              navigateTo('admin');
             };
             reader.readAsDataURL(file);
           });
@@ -1105,8 +1124,8 @@
 
           <div class="glass-card" style="padding:2rem; margin-bottom:2rem;">
             <h2>⚡ Skills</h2>
-            <div class="grid grid-skills" style="margin-top:1rem;">
-              ${APP_DATA.skills.map(s => `<div class="skill-box">${s}</div>`).join('')}
+            <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:1rem;">
+              ${APP_DATA.skills.map(s => `<span class="badge" style="font-size:1rem; padding:0.5rem 1rem;">${s}</span>`).join('')}
             </div>
           </div>
 
@@ -1115,11 +1134,11 @@
             ${APP_DATA.projects.length === 0 ? '<p style="color:#aaa;">No projects added yet.</p>' : ''}
             <div class="grid grid-2" style="margin-top:1rem;">
               ${APP_DATA.projects.map((proj) => `
-                <div class="glass-card" style="padding:1.5rem;">
+                <div class="glass" style="padding:1.5rem;">
                   <h3>${proj.title || 'Untitled Project'}</h3>
                   <p style="margin:0.5rem 0;">${proj.description || 'No description'}</p>
                   ${proj.technologies ? `<p><strong>Tech:</strong> ${proj.technologies}</p>` : ''}
-                  <div style="display:flex; gap:0.5rem; margin-top:1rem; flex-wrap:wrap;">
+                  <div style="display:flex; gap:0.5rem; margin-top:1rem;">
                     ${proj.githubLink ? `<a href="${proj.githubLink}" target="_blank" class="btn" style="text-decoration:none;">GitHub</a>` : ''}
                     ${proj.demoLink ? `<a href="${proj.demoLink}" target="_blank" class="btn" style="text-decoration:none;">Demo</a>` : ''}
                   </div>
@@ -1134,7 +1153,7 @@
             ${APP_DATA.achievements.length === 0 ? '<p style="color:#aaa;">No achievements yet.</p>' : ''}
             <div class="grid grid-2" style="margin-top:1rem;">
               ${APP_DATA.achievements.map((a) => `
-                <div class="glass-card" style="padding:1.5rem;">
+                <div class="glass" style="padding:1.5rem;">
                   <h3>${a.title || 'Achievement'}</h3>
                   <p>${a.description || ''}</p>
                   ${a.date ? `<small>📅 ${a.date}</small>` : ''}
@@ -1149,7 +1168,7 @@
             ${APP_DATA.events.length === 0 ? '<p style="color:#aaa;">No events yet.</p>' : ''}
             <div class="grid grid-2" style="margin-top:1rem;">
               ${APP_DATA.events.map((e) => `
-                <div class="glass-card" style="padding:1.5rem;">
+                <div class="glass" style="padding:1.5rem;">
                   <h3>${e.name || 'Event'}</h3>
                   <p>${e.description || ''}</p>
                   ${e.venue ? `<p>📍 ${e.venue}</p>` : ''}
@@ -1275,6 +1294,8 @@
 
     // ========== INITIALIZATION ==========
     window.onload = () => {
+      console.log('Platform initializing...');
+      
       setTimeout(() => {
         document.getElementById('loadingScreen').style.opacity = '0';
         document.getElementById('loadingScreen').style.visibility = 'hidden';
@@ -1298,6 +1319,8 @@
         else if(hash === 'public') renderPublicView();
       }
     });
+
+    console.log('✅ Platform Ready');
   </script>
 </body>
 </html>
