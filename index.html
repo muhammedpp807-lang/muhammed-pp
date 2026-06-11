@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Muhammed PP | Futuristic Portfolio Platform</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, sans-serif;
+      background: #0a0c10;
+      color: #e0e0ff;
+      overflow-x: hidden;
+      cursor: none;
+      scroll-behavior: smooth;
+      background: radial-gradient(circle at 20% 20%, #121828, #03050a);
+      min-height: 100vh;
+    }
+
+    .cursor {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      background: rgba(0, 255, 255, 0.6);
+      border-radius: 50%;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      z-index: 10000;
+      transition: transform 0.1s ease, background 0.2s;
+      box-shadow: 0 0 20px cyan, 0 0 40px #7b2ff7;
+      left: -100px;
+      top: -100px;
+    }
+
+    .cursor-glow {
+      position: fixed;
+      width: 50px;
+      height: 50px;
+      background: radial-gradient(circle, rgba(0, 180, 255, 0.5) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      left: -100px;
+      top: -100px;
+    }
+
+    .trail {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: cyan;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      opacity: 0.6;
+      box-shadow: 0 0 15px #a259ff;
+      left: -100px;
+      top: -100px;
+      transition: opacity 0.2s;
+    }
+
+    .glass {
+      background: rgba(18, 25, 45, 0.55);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      box-shadow: 0 20px 40px rgba(0, 180, 255, 0.15);
+      border-radius: 2rem;
+    }
+
+    .glass-card {
+      background: rgba(18, 25, 45, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 255, 255, 0.25);
+      box-shadow: 0 15px 35px rgba(0, 180, 255, 0.2);
+      border-radius: 1.5rem;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 50px rgba(0, 255, 255, 0.3);
+      border-color: rgba(0, 255, 255, 0.5);
+    }
+
+    .skill-box {
+      background: rgba(0, 255, 255, 0.08);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 1rem;
+      padding: 1rem 1.5rem;
+      color: cyan;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      word-break: break-word;
+    }
+
+    .skill-box:hover {
+      background: rgba(0, 255, 255, 0.15);
+      border-color: cyan;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 28px;
+      height: 28px;
+      background: rgba(255, 0, 0, 0.8);
+      border: 1px solid #ff4444;
+      border-radius: 50%;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+
+    .delete-btn:hover {
+      background: red;
+      transform: scale(1.2);
+      box-shadow: 0 0 15px red;
+    }
+
+    #loadingScreen {
+      position: fixed;
+      inset: 0;
+      background: #02040c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 20000;
+      transition: opacity 0.8s ease, visibility 0.8s;
+      backdrop-filter: blur(20px);
+    }
+    .loader {
+      width: 60px;
+      height: 60px;
+      border: 3px solid rgba(0,255,255,0.3);
+      border-top: 3px solid cyan;
+      border-radius: 50%;
+      animation: spin 1s infinite linear;
+      box-shadow: 0 0 30px #a259ff;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0f1a; }
+    ::-webkit-scrollbar-thumb { background: cyan; border-radius: 10px; }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    h1, h2, h3, h4 {
+      background: linear-gradient(135deg, cyan, #a259ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+    }
+
+    button, .btn {
+      background: rgba(0, 255, 255, 0.08);
+      border: 1px solid cyan;
+      color: cyan;
+      padding: 0.7rem 1.8rem;
+      border-radius: 3rem;
+      font-weight: bold;
+      backdrop-filter: blur(10px);
+      transition: 0.3s;
+      cursor: none;
+      letter-spacing: 0.5px;
+    }
+    button:hover, .btn:hover {
+      background: cyan;
+      color: #000;
+      box-shadow: 0 0 30px cyan;
+    }
+
+    input, textarea, select {
+      background: rgba(10, 20, 35, 0.7);
+      border: 1px solid #4b3f72;
+      border-radius: 2rem;
+      padding: 0.8rem 1.2rem;
+      color: white;
+      backdrop-filter: blur(12px);
+      outline: none;
+      transition: 0.3s;
+      width: 100%;
+      margin: 0.5rem 0;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: cyan;
+      box-shadow: 0 0 20px cyan;
+    }
+
+    .grid {
+      display: grid;
+      gap: 1rem;
+    }
+    .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+    .grid-skills { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+
+    .badge {
+      background: rgba(0, 255, 255, 0.15);
+      border: 1px solid cyan;
+      color: cyan;
+      padding: 0.3rem 0.8rem;
+      border-radius: 1rem;
+      font-size: 0.8rem;
+      display: inline-block;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.6s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .add-input-group {
+      display: flex;
+      gap: 0.5rem;
+      margin: 1rem 0;
+      align-items: center;
+    }
+
+    .add-input-group input {
+      margin: 0;
+      flex: 1;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 1rem; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .grid-skills { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <div id="loadingScreen">
+    <div class="loader"></div>
+    <p style="color: cyan; margin-top: 1rem;">Initializing Platform...</p>
+  </div>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <div id="appRoot" style="display: none;"></div>
+
+  <script>
+    // ========== GLOBAL STATE & STORAGE ==========
+    const STORAGE_KEY = 'MUHAMMED_PORTFOLIO_DB';
+    
+    const DEFAULT_ADMIN = {
+      username: 'admin',
+      password: 'admin123',
+      role: 'admin'
+    };
+
+    function getDefaultData() {
+      return {
+        users: [{ ...DEFAULT_ADMIN }],
+        profile: {
+          name: 'Muhammed PP',
+          title: 'Full Stack Developer & AI Enthusiast',
+          bio: 'Building futuristic digital experiences with code, creativity, and neon dreams.',
+          location: 'Kerala, India',
+          email: 'muhammed@example.com'
+        },
+        skills: ['JavaScript', 'React', 'Node.js', 'Python', 'AI/ML', 'Cloud'],
+        projects: [],
+        achievements: [],
+        events: [],
+        gallery: [],
+        videos: [],
+        files: [],
+        messages: [],
+        comments: [],
+        followers: [],
+        ratings: [],
+        visits: 0,
+      };
+    }
+
+    function loadData() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          const data = JSON.parse(stored);
+          if (!data.users || !data.users.some(u => u.username === 'admin')) {
+            if (!data.users) data.users = [];
+            data.users.push({ ...DEFAULT_ADMIN });
+          }
+          return data;
+        }
+      } catch (e) {
+        console.error('Error loading data:', e);
+      }
+      return getDefaultData();
+    }
+
+    function saveData(data) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) {
+        console.error('Error saving data:', e);
+      }
+    }
+
+    let APP_DATA = loadData();
+    
+    if (!APP_DATA.users.some(u => u.username === 'admin' && u.password === 'admin123')) {
+      APP_DATA.users = APP_DATA.users.filter(u => u.username !== 'admin');
+      APP_DATA.users.push({ ...DEFAULT_ADMIN });
+    }
+    
+    saveData(APP_DATA);
+
+    let currentUser = null;
+
+    // ========== UTILS ==========
+    function generateId() {
+      return Date.now().toString(36) + Math.random().toString(36).substr(2, 6);
+    }
+
+    function avgRating() {
+      if(!APP_DATA.ratings || !APP_DATA.ratings.length) return '0.0';
+      return (APP_DATA.ratings.reduce((a,b) => a + b.stars, 0) / APP_DATA.ratings.length).toFixed(1);
+    }
+
+    // ========== CUSTOM CURSOR ==========
+    const cursor = document.getElementById('cursor');
+    const cursorGlow = document.getElementById('cursorGlow');
+    let trailElements = [];
+    const maxTrails = 12;
+    
+    document.addEventListener('mousemove', (e) => {
+      if (!cursor || !cursorGlow) return;
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+      cursorGlow.style.left = e.clientX + 'px';
+      cursorGlow.style.top = e.clientY + 'px';
+      
+      const trail = document.createElement('div');
+      trail.className = 'trail';
+      trail.style.left = e.clientX + 'px';
+      trail.style.top = e.clientY + 'px';
+      document.body.appendChild(trail);
+      trailElements.push(trail);
+      
+      if (trailElements.length > maxTrails) {
+        const old = trailElements.shift();
+        if(old) old.remove();
+      }
+      setTimeout(() => {
+        if(trail) trail.style.opacity = '0';
+        setTimeout(() => { if(trail) trail.remove(); }, 300);
+      }, 200);
+    });
+
+    document.addEventListener('mouseover', (e) => {
+      if (!cursor) return;
+      if (e.target.tagName === 'BUTTON' || e.target.classList.contains('btn') || 
+          e.target.tagName === 'A' || e.target.classList.contains('glass-card') ||
+          e.target.classList.contains('skill-box')) {
+        cursor.style.transform = 'scale(2.2)';
+        cursor.style.background = '#a259ff';
+      }
+    });
+    
+    document.addEventListener('mouseout', () => {
+      if (!cursor) return;
+      cursor.style.transform = 'scale(1)';
+      cursor.style.background = 'rgba(0,255,255,0.6)';
+    });
+
+    // ========== RENDER ENGINE ==========
+    const appRoot = document.getElementById('appRoot');
+
+    function navigateTo(page) {
+      window.location.hash = page;
+      renderApp(page);
+    }
+
+    function renderApp(page) {
+      if (!currentUser) {
+        renderLogin();
+        return;
+      }
+
+      switch(page) {
+        case 'admin': renderAdminDashboard(); break;
+        case 'public': renderPublicView(); break;
+        case 'login': renderLogin(); break;
+        default: 
+          if (currentUser.role === 'admin') renderAdminDashboard();
+          else renderPublicView();
+      }
+    }
+
+    // ========== AUTH ==========
+    function login(username, password) {
+      APP_DATA = loadData();
+      
+      const user = APP_DATA.users.find(u => u.username === username && u.password === password);
+      
+      if (user) {
+        currentUser = { username: user.username, role: user.role };
+        APP_DATA.visits = (APP_DATA.visits || 0) + 1;
+        saveData(APP_DATA);
+        
+        if (user.role === 'admin') {
+          navigateTo('admin');
+        } else {
+          navigateTo('public');
+        }
+      } else {
+        alert('❌ Invalid credentials! Please try again.');
+      }
+    }
+
+    function logout() {
+      currentUser = null;
+      navigateTo('login');
+    }
+
+    function renderLogin() {
+      appRoot.innerHTML = `
+        <div class="container" style="display:flex; align-items:center; justify-content:center; min-height:100vh;">
+          <div class="glass" style="padding:3rem; max-width:450px; width:100%; text-align:center;">
+            <h2 style="font-size:2.5rem; margin-bottom:1rem;">⚡ MUHAMMED PP</h2>
+            <p style="color:#aaa; margin-bottom:2rem;">Portfolio Platform</p>
+            
+            <div style="margin:2rem 0;">
+              <input type="text" id="loginUsername" placeholder="Username" style="width:100%; margin-bottom:1rem;"><br>
+              <input type="password" id="loginPassword" placeholder="Password" style="width:100%; margin-bottom:1.5rem;"><br>
+              <button id="loginBtn" style="width:100%;">🚀 Access Portal</button>
+<p style="color:#aaa; margin-bottom:0.5rem;">Public user :public </p>           
+<p style="color:#aaa; margin-bottom:2rem;">Password : public123 </p>           
+              </div>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('loginBtn').addEventListener('click', () => {
+        const u = document.getElementById('loginUsername').value.trim();
+        const p = document.getElementById('loginPassword').value.trim();
+        
+        if (!u || !p) {
+          alert('⚠️ Please enter both username and password');
+          return;
+        }
+        
+        login(u, p);
+      });
+      
+      document.getElementById('loginPassword').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          document.getElementById('loginBtn').click();
+        }
+      });
+    }
+
+    // ========== ADMIN DASHBOARD ==========
+    function renderAdminDashboard() {
+      const unread = APP_DATA.messages ? APP_DATA.messages.filter(m => !m.read).length : 0;
+      appRoot.innerHTML = `
+        <div class="container fade-in">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+            <h1 style="font-size:2rem;">⚙️ ADMIN DASHBOARD</h1>
+            <div>
+              <button onclick="navigateTo('public')" style="margin-right:0.5rem;">👁️ View Public</button>
+              <button onclick="logout()">🚪 Logout (${currentUser.username})</button>
+            </div>
+          </div>
+          <div class="grid grid-4" style="margin:2rem 0;">
+            <div class="glass" style="padding:1.5rem; text-align:center;"><h3>👥 Users</h3><p style="font-size:2rem;">${APP_DATA.users.length}</p></div>
+            <div class="glass" style="padding:1.5rem; text-align:center;"><h3>📨 Messages</h3><p style="font-size:2rem;">${APP_DATA.messages.length} <small>(unread ${unread})</small></p></div>
+            <div class="glass" style="padding:1.5rem; text-align:center;"><h3>⭐ Rating</h3><p style="font-size:2rem;">${avgRating()}</p><small>${APP_DATA.ratings.length} ratings</small></div>
+            <div class="glass" style="padding:1.5rem; text-align:center;"><h3>👣 Followers</h3><p style="font-size:2rem;">${APP_DATA.followers.length}</p></div>
+          </div>
+          ${renderAdminTabs()}
+        </div>
+      `;
+      attachAdminEvents();
+    }
+
+    function renderAdminTabs() {
+      return `
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin:1.5rem 0;">
+          <button class="admin-tab active" data-tab="users">👤 Users</button>
+          <button class="admin-tab" data-tab="profile">📝 Profile</button>
+          <button class="admin-tab" data-tab="skills">⚡ Skills</button>
+          <button class="admin-tab" data-tab="projects">📁 Projects</button>
+          <button class="admin-tab" data-tab="achievements">🏆 Achievements</button>
+          <button class="admin-tab" data-tab="events">📅 Events</button>
+          <button class="admin-tab" data-tab="gallery">🖼️ Gallery</button>
+          <button class="admin-tab" data-tab="videos">🎥 Videos</button>
+          <button class="admin-tab" data-tab="files">📂 Files</button>
+          <button class="admin-tab" data-tab="messages">✉️ Messages</button>
+          <button class="admin-tab" data-tab="comments">💬 Comments</button>
+        </div>
+        <div id="adminTabContent" class="glass" style="padding:2rem;"></div>
+      `;
+    }
+
+    function attachAdminEvents() {
+      document.querySelectorAll('.admin-tab').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          const tab = this.dataset.tab;
+          document.getElementById('adminTabContent').innerHTML = getAdminTabHTML(tab);
+          attachTabSpecificEvents(tab);
+        });
+      });
+      const activeTab = document.querySelector('.admin-tab.active');
+      if(activeTab) activeTab.click();
+    }
+
+    function getAdminTabHTML(tab) {
+      switch(tab) {
+        case 'users': return renderUsersManager();
+        case 'profile': return renderProfileEditor();
+        case 'skills': return renderSkillsManager();
+        case 'projects': return renderProjectsManager();
+        case 'achievements': return renderAchievementsManager();
+        case 'events': return renderEventsManager();
+        case 'gallery': return renderGalleryManager();
+        case 'videos': return renderVideoManager();
+        case 'files': return renderFileManager();
+        case 'messages': return renderMessagesView();
+        case 'comments': return renderCommentsManager();
+        default: return '';
+      }
+    }
+
+    // ========== USERS MANAGER ==========
+    function renderUsersManager() {
+      let html = `
+        <div class="section-header">
+          <h3>👤 User Management</h3>
+        </div>
+        <div class="add-input-group">
+          <input id="newUsername" placeholder="Enter username">
+          <input id="newPassword" placeholder="Enter password" type="password">
+          <button id="createUserBtn">➕ Create User</button>
+        </div>
+        <div class="grid grid-2" style="margin-top:1rem;">`;
+      
+      APP_DATA.users.forEach(u => {
+        html += `
+          <div class="glass-card" style="padding:1.5rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+              <div>
+                <strong style="font-size:1.1rem;">${u.username}</strong>
+                <span class="badge" style="margin-left:0.5rem;">${u.role}</span>
+              </div>
+              <div style="display:flex; gap:0.5rem;">
+                ${u.username !== 'admin' ? `
+                  <button onclick="changeRole('${u.username}')">🔄 Toggle Role</button>
+                  <button onclick="resetUserPassword('${u.username}')">🔑 Reset PW</button>
+                  <button onclick="deleteUser('${u.username}')" style="border-color:#ff4444; color:#ff4444;">🗑️ Delete</button>
+                ` : '<span class="badge">Protected Admin</span>'}
+              </div>
+            </div>
+          </div>`;
+      });
+      
+      html += `</div>`;
+      return html;
+    }
+
+    window.changeRole = (username) => {
+      const user = APP_DATA.users.find(u => u.username === username);
+      if (user && username !== 'admin') {
+        user.role = user.role === 'admin' ? 'user' : 'admin';
+        saveData(APP_DATA);
+        navigateTo('admin');
+      }
+    };
+    
+    window.resetUserPassword = (username) => {
+      const newPw = prompt('New password for ' + username + ':');
+      if (newPw && newPw.trim()) {
+        const user = APP_DATA.users.find(u => u.username === username);
+        if (user) { 
+          user.password = newPw.trim(); 
+          saveData(APP_DATA); 
+          alert('✅ Password reset successfully!'); 
+          navigateTo('admin'); 
+        }
+      }
+    };
+    
+    window.deleteUser = (username) => {
+      if (username === 'admin') return;
+      if(confirm('Delete user ' + username + '?')) {
+        APP_DATA.users = APP_DATA.users.filter(u => u.username !== username);
+        saveData(APP_DATA); 
+        navigateTo('admin');
+      }
+    };
+
+    // ========== PROFILE EDITOR ==========
+    function renderProfileEditor() {
+      const p = APP_DATA.profile;
+      return `
+        <div class="section-header">
+          <h3>📝 Edit Profile</h3>
+          <button id="saveProfile">💾 Save Profile</button>
+        </div>
+        <div class="grid grid-2">
+          <input id="profileName" value="${p.name}" placeholder="Full Name">
+          <input id="profileTitle" value="${p.title}" placeholder="Professional Title">
+          <input id="profileLocation" value="${p.location || ''}" placeholder="Location">
+          <input id="profileEmail" value="${p.email || ''}" placeholder="Email">
+        </div>
+        <textarea id="profileBio" rows="4" placeholder="Bio">${p.bio}</textarea>
+      `;
+    }
+
+    // ========== SKILLS MANAGER (Box-based) ==========
+    function renderSkillsManager() {
+      let html = `
+        <div class="section-header">
+          <h3>⚡ Skills Management</h3>
+        </div>
+        <div class="add-input-group">
+          <input id="newSkillInput" placeholder="Enter skill name">
+          <button id="addSkillBtn">➕ Add Skill</button>
+        </div>
+        <div class="grid grid-skills" id="skillsGrid" style="margin-top:1rem;">`;
+      
+      APP_DATA.skills.forEach((skill, index) => {
+        html += `
+          <div class="skill-box">
+            ${skill}
+            <span class="delete-btn" onclick="deleteSkill(${index})" title="Delete skill">✕</span>
+          </div>`;
+      });
+      
+      html += `</div>`;
+      return html;
+    }
+
+    window.deleteSkill = (index) => {
+      if(confirm('Delete this skill?')) {
+        APP_DATA.skills.splice(index, 1);
+        saveData(APP_DATA);
+        document.getElementById('adminTabContent').innerHTML = renderSkillsManager();
+        attachTabSpecificEvents('skills');
+      }
+    };
+
+    // ========== PROJECTS MANAGER ==========
+    function renderProjectsManager() {
+      let html = `
+        <div class="section-header">
+          <h3>📁 Projects Management</h3>
+          <button id="addProject">➕ Add New Project</button>
+        </div>
+        <div id="projectsList" class="grid grid-2" style="margin-top:1rem;">`;
+      
+      APP_DATA.projects.forEach((p, i) => {
+        html += `
+          <div class="glass-card" style="padding:1.5rem;">
+            <span class="delete-btn" onclick="deleteItem('projects',${i})" title="Delete project">✕</span>
+            <input value="${p.title || ''}" placeholder="Project Title" onchange="updateProject(${i},'title',this.value)">
+            <textarea placeholder="Description" onchange="updateProject(${i},'description',this.value)" rows="2">${p.description || ''}</textarea>
+            <input value="${p.technologies || ''}" placeholder="Technologies (comma separated)" onchange="updateProject(${i},'technologies',this.value)">
+            <input value="${p.githubLink || ''}" placeholder="GitHub Link" onchange="updateProject(${i},'githubLink',this.value)">
+            <input value="${p.demoLink || ''}" placeholder="Demo Link" onchange="updateProject(${i},'demoLink',this.value)">
+          </div>`;
+      });
+      
+      html += `</div>`;
+      return html;
+    }
+
+    window.updateProject = (index, field, value) => {
+      if (!APP_DATA.projects[index]) APP_DATA.projects[index] = {};
+      APP_DATA.projects[index][field] = value;
+      saveData(APP_DATA);
+    };
+
+    // ========== ACHIEVEMENTS MANAGER ==========
+    function renderAchievementsManager() {
+      let html = `
+        <div class="section-header">
+          <h3>🏆 Achievements Management</h3>
+          <button id="addAchievement">➕ Add Achievement</button>
+        </div>
+        <div id="achievementsList" class="grid grid-2" style="margin-top:1rem;">`;
+      
+      APP_DATA.achievements.forEach((a, i) => {
+        html += `
+          <div class="glass-card" style="padding:1.5rem;">
+            <span class="delete-btn" onclick="deleteItem('achievements',${i})" title="Delete achievement">✕</span>
+            <input value="${a.title || ''}" placeholder="Title" onchange="updateAchievement(${i},'title',this.value)">
+            <textarea placeholder="Description" onchange="updateAchievement(${i},'description',this.value)" rows="2">${a.description || ''}</textarea>
+            <input value="${a.date || ''}" type="date" onchange="updateAchievement(${i},'date',this.value)">
+          </div>`;
+      });
+      
+      html += `</div>`;
+      return html;
+    }
+
+    window.updateAchievement = (index, field, value) => {
+      if (!APP_DATA.achievements[index]) APP_DATA.achievements[index] = {};
+      APP_DATA.achievements[index][field] = value;
+      saveData(APP_DATA);
+    };
+
+    // ========== EVENTS MANAGER ==========
+    function renderEventsManager() {
+      let html = `
+        <div class="section-header">
+          <h3>📅 Events Management</h3>
+          <button id="addEvent">➕ Add Event</button>
+        </div>
+        <div id="eventsList" class="grid grid-2" style="margin-top:1rem;">`;
+      
+      APP_DATA.events.forEach((e, i) => {
+        html += `
+          <div class="glass-card" style="padding:1.5rem;">
+            <span class="delete-btn" onclick="deleteItem('events',${i})" title="Delete event">✕</span>
+            <input value="${e.name || ''}" placeholder="Event Name" onchange="updateEvent(${i},'name',this.value)">
+            <input value="${e.date || ''}" type="date" onchange="updateEvent(${i},'date',this.value)">
+            <input value="${e.venue || ''}" placeholder="Venue" onchange="updateEvent(${i},'venue',this.value)">
+            <textarea placeholder="Description" onchange="updateEvent(${i},'description',this.value)" rows="2">${e.description || ''}</textarea>
+          </div>`;
+      });
+      
+      html += `</div>`;
+      return html;
+    }
+
+    window.updateEvent = (index, field, value) => {
+      if (!APP_DATA.events[index]) APP_DATA.events[index] = {};
+      APP_DATA.events[index][field] = value;
+      saveData(APP_DATA);
+    };
+
+    // ========== GALLERY MANAGER ==========
+    function renderGalleryManager() {
+      return `
+        <div class="section-header">
+          <h3>🖼️ Gallery Management</h3>
+        </div>
+        <input type="file" id="galleryUpload" accept="image/*" multiple style="margin-bottom:1rem;">
+        <div id="galleryPreview" class="grid grid-3">
+          ${APP_DATA.gallery.map((img, i) => `
+            <div class="glass-card" style="padding:0.5rem; position:relative;">
+              <span class="delete-btn" onclick="deleteItem('gallery',${i})" title="Delete image">✕</span>
+              <img src="${img}" style="width:100%; height:200px; object-fit:cover; border-radius:1rem;" loading="lazy">
+            </div>
+          `).join('')}
+        </div>`;
+    }
+
+    // ========== VIDEOS MANAGER ==========
+    function renderVideoManager() {
+      return `
+        <div class="section-header">
+          <h3>🎥 Videos Management</h3>
+        </div>
+        <input type="file" id="videoUpload" accept="video/*" multiple style="margin-bottom:1rem;">
+        <div id="videoPreview" class="grid grid-2">
+          ${APP_DATA.videos.map((v, i) => `
+            <div class="glass-card" style="padding:0.5rem; position:relative;">
+              <span class="delete-btn" onclick="deleteItem('videos',${i})" title="Delete video">✕</span>
+              <video src="${v}" controls style="width:100%; border-radius:1rem;"></video>
+            </div>
+          `).join('')}
+        </div>`;
+    }
+
+    // ========== FILES MANAGER ==========
+    function renderFileManager() {
+      return `
+        <div class="section-header">
+          <h3>📂 Files Management</h3>
+        </div>
+        <input type="file" id="fileUpload" multiple style="margin-bottom:1rem;">
+        <div id="fileList">
+          ${APP_DATA.files.map((f, i) => `
+            <div class="glass-card" style="padding:1rem; display:flex; justify-content:space-between; align-items:center; margin:0.5rem 0;">
+              <span>📄 ${f.name} (${f.type})</span>
+              <div style="display:flex; gap:0.5rem;">
+                <a href="${f.data}" download="${f.name}" class="btn" style="text-decoration:none;">⬇️ Download</a>
+                <span class="delete-btn" style="position:static;" onclick="deleteItem('files',${i})" title="Delete file">✕</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>`;
+    }
+
+    // ========== MESSAGES VIEW ==========
+    function renderMessagesView() {
+      return `
+        <div class="section-header">
+          <h3>✉️ Messages</h3>
+        </div>
+        ${APP_DATA.messages.length === 0 ? '<p style="color:#aaa;">No messages yet.</p>' : ''}
+        ${APP_DATA.messages.map((m, i) => `
+          <div class="glass-card" style="padding:1.5rem; margin:0.5rem 0; ${m.read ? 'opacity:0.6;' : ''}">
+            <span class="delete-btn" onclick="deleteMessage(${i})" title="Delete message">✕</span>
+            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+              <strong>${m.name}</strong>
+              <small>${m.email}</small>
+            </div>
+            <p style="margin:0.5rem 0;"><strong>Subject:</strong> ${m.subject || 'No subject'}</p>
+            <p>${m.message}</p>
+            <button onclick="toggleMessageRead(${i})">${m.read ? '📩 Mark Unread' : '📬 Mark Read'}</button>
+          </div>
+        `).join('')}`;
+    }
+
+    window.toggleMessageRead = (index) => {
+      APP_DATA.messages[index].read = !APP_DATA.messages[index].read;
+      saveData(APP_DATA);
+      navigateTo('admin');
+    };
+
+    window.deleteMessage = (index) => {
+      if(confirm('Delete this message?')) {
+        APP_DATA.messages.splice(index, 1);
+        saveData(APP_DATA);
+        navigateTo('admin');
+      }
+    };
+
+    // ========== COMMENTS MANAGER ==========
+    function renderCommentsManager() {
+      return `
+        <div class="section-header">
+          <h3>💬 Comments</h3>
+        </div>
+        ${APP_DATA.comments.length === 0 ? '<p style="color:#aaa;">No comments yet.</p>' : ''}
+        ${APP_DATA.comments.map((c, i) => `
+          <div class="glass-card" style="padding:1.5rem; margin:0.5rem 0;">
+            <span class="delete-btn" onclick="deleteComment(${i})" title="Delete comment">✕</span>
+            <div style="display:flex; justify-content:space-between; flex-wrap:wrap;">
+              <strong>${c.author}</strong>
+              <small>on ${c.targetType || 'item'}</small>
+            </div>
+            <p style="margin:0.5rem 0;">${c.text}</p>
+            <small>${new Date(c.date).toLocaleString()}</small>
+          </div>
+        `).join('')}`;
+    }
+
+    window.deleteItem = (key, index) => {
+      if(confirm('Delete this item?')) {
+        APP_DATA[key].splice(index, 1);
+        saveData(APP_DATA);
+        navigateTo('admin');
+      }
+    };
+
+    window.deleteComment = (index) => {
+      if(confirm('Delete this comment?')) {
+        APP_DATA.comments.splice(index, 1);
+        saveData(APP_DATA);
+        navigateTo('admin');
+      }
+    };
+
+    function attachTabSpecificEvents(tab) {
+      if(tab === 'users') {
+        document.getElementById('createUserBtn')?.addEventListener('click', () => {
+          const uname = document.getElementById('newUsername').value.trim();
+          const pw = document.getElementById('newPassword').value.trim();
+          if(uname && pw) {
+            if(APP_DATA.users.find(u => u.username === uname)) {
+              alert('❌ Username already exists!');
+              return;
+            }
+            APP_DATA.users.push({username: uname, password: pw, role: 'user'});
+            saveData(APP_DATA);
+            alert('✅ User created successfully!');
+            navigateTo('admin');
+          } else {
+            alert('⚠️ Please fill all fields');
+          }
+        });
+      }
+      if(tab === 'profile') {
+        document.getElementById('saveProfile')?.addEventListener('click', () => {
+          APP_DATA.profile.name = document.getElementById('profileName').value;
+          APP_DATA.profile.title = document.getElementById('profileTitle').value;
+          APP_DATA.profile.location = document.getElementById('profileLocation').value;
+          APP_DATA.profile.email = document.getElementById('profileEmail').value;
+          APP_DATA.profile.bio = document.getElementById('profileBio').value;
+          saveData(APP_DATA);
+          alert('✅ Profile saved!');
+          navigateTo('admin');
+        });
+      }
+      if(tab === 'skills') {
+        document.getElementById('addSkillBtn')?.addEventListener('click', () => {
+          const skill = document.getElementById('newSkillInput').value.trim();
+          if(skill) {
+            APP_DATA.skills.push(skill);
+            saveData(APP_DATA);
+            document.getElementById('newSkillInput').value = '';
+            document.getElementById('adminTabContent').innerHTML = renderSkillsManager();
+            attachTabSpecificEvents('skills');
+          }
+        });
+        
+        document.getElementById('newSkillInput')?.addEventListener('keypress', (e) => {
+          if(e.key === 'Enter') {
+            document.getElementById('addSkillBtn').click();
+          }
+        });
+      }
+      if(tab === 'projects') {
+        document.getElementById('addProject')?.addEventListener('click', () => {
+          APP_DATA.projects.push({
+            id: generateId(),
+            title: '',
+            description: '',
+            technologies: '',
+            githubLink: '',
+            demoLink: ''
+          });
+          saveData(APP_DATA);
+          navigateTo('admin');
+        });
+      }
+      if(tab === 'achievements') {
+        document.getElementById('addAchievement')?.addEventListener('click', () => {
+          APP_DATA.achievements.push({
+            id: generateId(),
+            title: '',
+            description: '',
+            date: ''
+          });
+          saveData(APP_DATA);
+          navigateTo('admin');
+        });
+      }
+      if(tab === 'events') {
+        document.getElementById('addEvent')?.addEventListener('click', () => {
+          APP_DATA.events.push({
+            id: generateId(),
+            name: '',
+            date: '',
+            venue: '',
+            description: ''
+          });
+          saveData(APP_DATA);
+          navigateTo('admin');
+        });
+      }
+      if(tab === 'gallery') {
+        document.getElementById('galleryUpload')?.addEventListener('change', function(e) {
+          const files = Array.from(e.target.files);
+          let loaded = 0;
+          files.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+              APP_DATA.gallery.push(ev.target.result);
+              loaded++;
+              if(loaded === files.length) {
+                saveData(APP_DATA);
+                navigateTo('admin');
+              }
+            };
+            reader.readAsDataURL(file);
+          });
+        });
+      }
+      if(tab === 'videos') {
+        document.getElementById('videoUpload')?.addEventListener('change', function(e) {
+          const files = Array.from(e.target.files);
+          let loaded = 0;
+          files.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+              APP_DATA.videos.push(ev.target.result);
+              loaded++;
+              if(loaded === files.length) {
+                saveData(APP_DATA);
+                navigateTo('admin');
+              }
+            };
+            reader.readAsDataURL(file);
+          });
+        });
+      }
+      if(tab === 'files') {
+        document.getElementById('fileUpload')?.addEventListener('change', function(e) {
+          const files = Array.from(e.target.files);
+          let loaded = 0;
+          files.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+              APP_DATA.files.push({
+                id: generateId(),
+                name: file.name,
+                type: file.type,
+                data: ev.target.result
+              });
+              loaded++;
+              if(loaded === files.length) {
+                saveData(APP_DATA);
+                navigateTo('admin');
+              }
+            };
+            reader.readAsDataURL(file);
+          });
+        });
+      }
+    }
+
+    // ========== PUBLIC VIEW ==========
+    function renderPublicView() {
+      const p = APP_DATA.profile;
+      const isFollowing = APP_DATA.followers.includes(currentUser.username);
+      
+      appRoot.innerHTML = `
+        <div class="container fade-in">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:2rem;">
+            <h1 style="font-size:2.5rem;">✨ ${p.name}</h1>
+            <button onclick="logout()">🚪 Logout</button>
+          </div>
+
+          <div class="glass-card" style="padding:2rem; margin-bottom:2rem;">
+            <h2>${p.title}</h2>
+            <p style="margin:1rem 0; font-size:1.1rem;">${p.bio}</p>
+            ${p.location ? `<p>📍 ${p.location}</p>` : ''}
+            ${p.email ? `<p>📧 ${p.email}</p>` : ''}
+          </div>
+
+          <div class="grid grid-4" style="margin-bottom:2rem;">
+            <div class="glass" style="padding:1.5rem; text-align:center;">
+              <h3>⭐ Rating</h3>
+              <p style="font-size:2rem;">${avgRating()}</p>
+              <small>${APP_DATA.ratings.length} ratings</small>
+            </div>
+            <div class="glass" style="padding:1.5rem; text-align:center;">
+              <h3>👥 Followers</h3>
+              <p style="font-size:2rem;">${APP_DATA.followers.length}</p>
+            </div>
+            <div class="glass" style="padding:1.5rem; text-align:center;">
+              <h3>💬 Comments</h3>
+              <p style="font-size:2rem;">${APP_DATA.comments.length}</p>
+            </div>
+            <div class="glass" style="padding:1.5rem; text-align:center;">
+              <h3>👁️ Visits</h3>
+              <p style="font-size:2rem;">${APP_DATA.visits}</p>
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding:1.5rem; margin-bottom:2rem; display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+            <button id="followBtn">${isFollowing ? '❤️ Unfollow' : '🤍 Follow'}</button>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <span>Rate:</span>
+              <select id="ratingSelect">
+                <option value="5">⭐⭐⭐⭐⭐</option>
+                <option value="4">⭐⭐⭐⭐</option>
+                <option value="3">⭐⭐⭐</option>
+                <option value="2">⭐⭐</option>
+                <option value="1">⭐</option>
+              </select>
+              <button id="rateBtn">Submit Rating</button>
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding:2rem; margin-bottom:2rem;">
+            <h2>⚡ Skills</h2>
+            <div class="grid grid-skills" style="margin-top:1rem;">
+              ${APP_DATA.skills.map(s => `<div class="skill-box">${s}</div>`).join('')}
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding:2rem; margin-bottom:2rem;">
+            <h2>📁 Projects</h2>
+            ${APP_DATA.projects.length === 0 ? '<p style="color:#aaa;">No projects added yet.</p>' : ''}
+            <div class="grid grid-2" style="margin-top:1rem;">
+              ${APP_DATA.projects.map((proj) => `
+                <div class="glass-card" style="padding:1.5rem;">
+                  <h3>${proj.title || 'Untitled Project'}</h3>
+                  <p style="margin:0.5rem 0;">${proj.description || 'No description'}</p>
+                  ${proj.technologies ? `<p><strong>Tech:</strong> ${proj.technologies}</p>` : ''}
+                  <div style="display:flex; gap:0.5rem; margin-top:1rem; flex-wrap:wrap;">
+                    ${proj.githubLink ? `<a href="${proj.githubLink}" target="_blank" class="btn" style="text-decoration:none;">GitHub</a>` : ''}
+                    ${proj.demoLink ? `<a href="${proj.demoLink}" target="_blank" class="btn" style="text-decoration:none;">Demo</a>` : ''}
+                  </div>
+                  <button onclick="addComment('project','${proj.id}')" style="margin-top:1rem;">💬 Comment</button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding:2rem; margin-bottom:2rem;">
+            <h2>🏆 Achievements</h2>
+            ${APP_DATA.achievements.length === 0 ? '<p style="color:#aaa;">No achievements yet.</p>' : ''}
+            <div class="grid grid-2" style="margin-top:1rem;">
+              ${APP_DATA.achievements.map((a) => `
+                <div class="glass-card" style="padding:1.5rem;">
+                  <h3>${a.title || 'Achievement'}</h3>
+                  <p>${a.description || ''}</p>
+                  ${a.date ? `<small>📅 ${a.date}</small>` : ''}
+                  <button onclick="addComment('achievement','${a.id}')" style="margin-top:1rem;">💬 Comment</button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding:2rem; margin-bottom:2rem;">
+            <h2>📅 Events</h2>
+            ${APP_DATA.events.length === 0 ? '<p style="color:#aaa;">No events yet.</p>' : ''}
+            <div class="grid grid-2" style="margin-top:1rem;">
+              ${APP_DATA.events.map((e) => `
+                <div class="glass-card" style="padding:1.5rem;">
+                  <h3>${e.name || 'Event'}</h3>
+                  <p>${e.description || ''}</p>
+                  ${e.venue ? `<p>📍 ${e.venue}</p>` : ''}
+                  ${e.date ? `<small>📅 ${e.date}</small>` : ''}
+                  <button onclick="addComment('event','${e.id}')" style="margin-top:1rem;">💬 Comment</button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding:2rem; margin-bottom:2rem;">
+            <h2>🖼️ Gallery</h2>
+            ${APP_DATA.gallery.length === 0 ? '<p style="color:#aaa;">No images yet.</p>' : ''}
+            <div class="grid grid-3" style="margin-top:1rem;">
+              ${APP_DATA.gallery.map((img) => `
+                <div class="glass" style="padding:0.5rem;">
+                  <img src="${img}" style="width:100%; height:200px; object-fit:cover; border-radius:1rem;" loading="lazy">
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding:2rem; margin-bottom:2rem;">
+            <h2>🎥 Videos</h2>
+            ${APP_DATA.videos.length === 0 ? '<p style="color:#aaa;">No videos yet.</p>' : ''}
+            <div class="grid grid-2" style="margin-top:1rem;">
+              ${APP_DATA.videos.map((v) => `
+                <div class="glass" style="padding:0.5rem;">
+                  <video src="${v}" controls style="width:100%; border-radius:1rem;"></video>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding:2rem; margin-bottom:2rem;">
+            <h2>📂 Files</h2>
+            ${APP_DATA.files.length === 0 ? '<p style="color:#aaa;">No files uploaded yet.</p>' : ''}
+            <div style="margin-top:1rem;">
+              ${APP_DATA.files.map((f) => `
+                <div class="glass" style="padding:1rem; display:flex; justify-content:space-between; align-items:center; margin:0.5rem 0;">
+                  <span>📄 ${f.name} (${f.type})</span>
+                  <a href="${f.data}" download="${f.name}" class="btn" style="text-decoration:none;">⬇️ Download</a>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding:2rem; margin-bottom:2rem;">
+            <h2>📧 Send Message</h2>
+            <input id="msgName" placeholder="Your Name">
+            <input id="msgEmail" placeholder="Your Email" type="email">
+            <input id="msgSubject" placeholder="Subject">
+            <textarea id="msgText" placeholder="Your Message" rows="4"></textarea>
+            <button id="sendMsg" style="margin-top:1rem;">📨 Send Message</button>
+          </div>
+
+          <div class="glass-card" style="padding:2rem; margin-bottom:2rem;">
+            <h2>💬 Recent Comments</h2>
+            ${APP_DATA.comments.length === 0 ? '<p style="color:#aaa;">No comments yet.</p>' : ''}
+            ${APP_DATA.comments.slice(-10).reverse().map(c => `
+              <div class="glass" style="padding:1rem; margin:0.5rem 0;">
+                <strong>${c.author}</strong> <small>on ${c.targetType || 'item'}</small>
+                <p>${c.text}</p>
+                <small>${new Date(c.date).toLocaleString()}</small>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      document.getElementById('followBtn')?.addEventListener('click', () => {
+        if(APP_DATA.followers.includes(currentUser.username)) {
+          APP_DATA.followers = APP_DATA.followers.filter(f => f !== currentUser.username);
+        } else {
+          APP_DATA.followers.push(currentUser.username);
+        }
+        saveData(APP_DATA);
+        renderPublicView();
+      });
+
+      document.getElementById('rateBtn')?.addEventListener('click', () => {
+        const stars = parseInt(document.getElementById('ratingSelect').value);
+        APP_DATA.ratings = APP_DATA.ratings.filter(r => r.userId !== currentUser.username);
+        APP_DATA.ratings.push({userId: currentUser.username, stars});
+        saveData(APP_DATA);
+        renderPublicView();
+      });
+
+      document.getElementById('sendMsg')?.addEventListener('click', () => {
+        const msg = {
+          id: generateId(),
+          name: document.getElementById('msgName').value,
+          email: document.getElementById('msgEmail').value,
+          subject: document.getElementById('msgSubject').value,
+          message: document.getElementById('msgText').value,
+          read: false,
+          date: new Date().toISOString()
+        };
+        APP_DATA.messages.push(msg);
+        saveData(APP_DATA);
+        alert('✅ Message sent successfully!');
+        renderPublicView();
+      });
+    }
+
+    window.addComment = (targetType, targetId) => {
+      const text = prompt(`Add your comment on this ${targetType}:`);
+      if(text && text.trim()) {
+        APP_DATA.comments.push({
+          id: generateId(),
+          targetType,
+          targetId,
+          text: text.trim(),
+          author: currentUser.username,
+          date: new Date().toISOString()
+        });
+        saveData(APP_DATA);
+        renderPublicView();
+      }
+    };
+
+    window.navigateTo = navigateTo;
+
+    // ========== INITIALIZATION ==========
+    window.onload = () => {
+      setTimeout(() => {
+        document.getElementById('loadingScreen').style.opacity = '0';
+        document.getElementById('loadingScreen').style.visibility = 'hidden';
+        appRoot.style.display = 'block';
+        
+        const hash = window.location.hash.substring(1);
+        if (hash === 'admin' && currentUser?.role === 'admin') {
+          renderAdminDashboard();
+        } else if (hash === 'public' && currentUser) {
+          renderPublicView();
+        } else {
+          renderLogin();
+        }
+      }, 1000);
+    };
+
+    window.addEventListener('hashchange', () => {
+      if(currentUser) {
+        const hash = window.location.hash.substring(1);
+        if(hash === 'admin' && currentUser.role === 'admin') renderAdminDashboard();
+        else if(hash === 'public') renderPublicView();
+      }
+    });
+  </script>
+</body>
+</html>
