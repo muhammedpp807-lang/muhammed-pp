@@ -83,7 +83,7 @@ export interface Video { id: string; title: string; description?: string; catego
 const uid = () => Math.random().toString(36).slice(2, 10);
 
 const seedUsers: User[] = [
-  { id: "u0", name: "Muhammed PP", email: "admin@muhammedpp.dev", password: "admin123", role: "superadmin", avatar: "MP", bio: "Technology Enthusiast · Web Developer · AI Explorer · Future Network Administrator", createdAt: new Date().toISOString() },
+  { id: "u0", name: "Muhammed PP", email: "muhammedpp807@gmail.com", password: "M#@7,2.3/!pp", role: "superadmin", avatar: "MP", bio: "Technology Enthusiast · Web Developer · AI Explorer · Future Network Administrator", createdAt: new Date().toISOString() },
   { id: "u1", name: "Aisha Khan", email: "aisha@demo.com", password: "demo123", role: "user", createdAt: new Date().toISOString() },
   { id: "u2", name: "Rahul Das", email: "rahul@demo.com", password: "demo123", role: "user", createdAt: new Date().toISOString() },
 ];
